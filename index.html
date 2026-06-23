@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveID</title>
+    <style>
+        /* --- CONFIGURAÇÕES GERAIS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            /* Evita que a barra de navegação cubra o título ao clicar */
+            scroll-padding-top: 90px; 
+        }
+
+        body {
+            background-color: #06090e;
+            color: #ffffff;
+            line-height: 1.6;
+            padding-top: 80px; /* Espaço para o menu fixo */
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- DESIGN DO HEADER & BOTÕES DE NAVEGAÇÃO --- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(6, 9, 14, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #141b27;
+            z-index: 1000;
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.03);
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #141b27;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: #00f2fe;
+            border-color: #00f2fe;
+            background: rgba(0, 242, 254, 0.05);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        }
+
+        /* --- CLASSES DE ESTILO INTERNAS --- */
+        .texto-centro {
+            text-align: center;
+        }
+
+        .texto-gradiente {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* --- SEÇÕES --- */
+        .section {
+            padding: 60px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        /* --- CARD INTERATIVO (ARRASTAR/ROLAR) --- */
+        .card-leitura {
+            background: #0f141c;
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 750px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Container interno que segura o texto grande */
+        .scroll-container {
+            max-height: 200px; /* Altura controlada para o texto não esticar a tela */
+            overflow-y: auto;  /* Permite rolar e arrastar no mobile */
+            padding-right: 12px;
+        }
+
+        .scroll-container p {
+            color: #94a3b8;
+            font-size: 15px;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        /* Indicador visual de que tem mais texto */
+        .card-leitura::after {
+            content: '';
+            position: absolute;
+            bottom: 45px;
+            left: 2px;
+            width: calc(100% - 4px);
+            height: 40px;
+            background: linear-gradient(transparent, #0f141c);
+            pointer-events: none; /* Permite clicar através do efeito */
+        }
+
+        .hint-drag {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            color: #00f2fe;
+            margin-top: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+
+        /* Customização da barra de rolagem interna (estilo minimalista) */
+        .scroll-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(#00f2fe, #4facfe);
+            border-radius: 10px;
+        }
+
+        /* --- CASO ESPECÍFICO: CARD DA EQUIPE --- */
+        .badge-vaga {
+            margin-top: 16px;
+            display: inline-block;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px dashed #00f2fe;
+            color: #00f2fe;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Animação simples para o aviso de arrastar */
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.9; }
+            100% { opacity: 0.4; }
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .nav-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            body { padding-top: 140px; }
+            h2 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER / MENU COM BOTÕES DE DIRECIONAMENTO -->
+    <div class="header">
+        <div class="container header-content">
+            <div class="logo">DriveID</div>
+            <div class="nav-buttons">
+                <a href="#Problema" class="nav-btn">Problema</a>
+                <a href="#Ideia" class="nav-btn">Ideia</a>
+                <a href="#Proposta" class="nav-btn">Proposta de Valor</a>
+                <a href="#Equipe" class="nav-btn">Equipe</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: PROBLEMA -->
+    <div id="Problema" class="section texto-centro">
+        <div class="container">
+            <h2 class="texto-gradiente">Problema</h2>
+            
+            <div class="card-leitura">
+                <div class="scroll-container">
+                    <p> Nós separamos três problemas principais que nosso software auxilia a combater: O Gargalo Físico (A Jornada do Usuário)
+o cliente entra no shopping, retira um ticket de papel e o guarda. Na hora de ir embora, ele precisa:
+Encontrar um totem de pagamento (que geralmente tem filas enormes).
+Lidar com máquinas que não aceitam notas amassadas ou estão sem troco.
+Digitar o CPF para a nota fiscal em um teclado touch-screen lento.
+
+- O Problema do "Ticket Perdido"
+No meio do passeio, o cliente perde o ticket de papel.
+A consequência: Ele é obrigado a ir até um balcão central, provar que horas entrou, preencher um formulário manual e, muitas vezes, pagar uma multa por perda de ticket. Isso gera um estresse imenso e toma 30 minutos de um tempo que ele não tem.
+
+- A Retenção na Saída (O Efeito Dominó)
+Quando o cliente finalmente chega à cancela de saída:
+Ele precisa abaixar o vidro (no frio ou na chuva).
+Precisa procurar o ticket pago.
+Se o ticket der erro de leitura na máquina da cancela, ele trava a fila inteira.
+O resultado: Uma fila de 15 carros buzinando, um segurança tendo que ir até lá manualmente e o trânsito do entorno do shopping sendo afetado.</p>
+                </div>
+                <span class="hint-drag">↕ ARRASTE OU ROLE PARA LER MAIS</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: IDEIA -->
+    <div id="Ideia" class="section texto-centro">
+        <div class="container">
+            <h2 class="texto-gradiente">Ideia</h2>
+            
+            <div class="card-leitura">
+                <div class="scroll-container">
+                    <p>A ideia principal do DriveID é criar uma plataforma que transforma a placa do veículo em uma identidade digital única, integrada e inteligente para o Brasil. Fundamentado na premissa de que o veículo já é a identidade do motorista e, portanto, não deveria precisar de carteira , o projeto surge para sanar o caos de um sistema de mobilidade fragmentado que consome tempo, paciência e dinheiro. Atualmente, motoristas urbanos enfrentam problemas desintegrados, como tickets físicos e filas em estacionamentos , a obrigatoriedade de tags diferentes para cada concessionária de pedágio , e dados espalhados em múltiplos aplicativos —fatores que fazem o usuário perder, em média, 15 minutos por dia em processos de acesso e pagamento.</p>
+                </div>
+                <span class="hint-drag">↕ ARRASTE OU ROLE PARA LER MAIS</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: PROPOSTA DE VALOR -->
+    <div id="Proposta" class="section texto-centro">
+        <div class="container">
+            <h2 class="texto-gradiente">Proposta de Valor</h2>
+            
+            <div class="card-leitura">
+                <div class="scroll-container">
+                    <p>Nossa proposta de valor é clara: Transformar o veículo em um meio de pagamento autônomo, eliminando filas, tickets físicos e burocracia para criar a experiência de estacionamento mais rápida do mercado.O DriveID destaca-se pela sua integração total, centralizando o pagamento e o acesso a estacionamentos, pedágios (portagens) e outros serviços automóveis numa única plataforma unificada. Tudo isto é suportado por um sistema nacional, criando uma identidade digital abrangente e válida em todo o território brasileiro. Na prática, esta proposta de valor elimina o atrito e o desperdício de tempo no dia a dia, transformando o processo de cobrança numa experiência invisível e ágil que ocorre em menos de 2 segundos, fazendo com que o motorista nem perceba a transação e sinta apenas a fluidez e a diferença na sua viagem.</p>
+                </div>
+                <span class="hint-drag">↕ ARRASTE OU ROLE PARA LER MAIS</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: COMPONENTES DA EQUIPE -->
+    <div id="Equipe" class="section texto-centro">
+        <div class="container">
+            <h2 class="texto-gradiente">Componentes da Equipe</h2>
+            
+            <div class="card-leitura" style="padding-bottom: 32px;">
+                <p style="color: #94a3b8; font-size: 15px;">Nosso projeto é feito de três integrantes da turma de ADS 11, sendo eles: Yuri, Olavo e Daniel</p>
+                <div class="badge-vaga">Projeto de desenvolvimento de software - UniCesusc</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
