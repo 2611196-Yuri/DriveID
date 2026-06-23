@@ -1,7 +1,7 @@
 # 🚘 DriveID
 ![Status](https://img.shields.io/badge/Projeto%20PMI-Land%20Page-ff6b6b?labelColor=blue) 
 
- **Oi, tudo bem? Seja bem-vindo(a)!**
+ **Olá, tudo bem? Seja bem-vindo(a)!**
  
 Somos alunos do curso de ADS da UniCesusc e este é o repositório do projeto **DriveID**. <br>
 Usaremos esse repositório para documentar nossa evolução.
